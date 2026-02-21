@@ -9,7 +9,7 @@ function App() {
   ])
 
   function fetchNotes() {
-    axios.get('http://localhost:3000/api/notes')
+    axios.get('https://full-stack-1-o577.onrender.com/api/notes')
     .then((res) => {
       // console.log(res.data)  // abhi browser pr CORS error aayega, ye browser(client) side pr aata hai, ye policy bolti hai ki aap ek website pr rehte huye dusri kisi website pr request nhi kr skte. Abhi hmara frontend and backend local pr run ho rha hai but inka address alg hai isliye error aayega. isi liye sirf development time pr ham CORs request ko accept krenge. isko accept krne keliye hm backend ke terminal pr cors packaage install krenge, "npm i cors"
       //  HMNE CORS INSTALL KR LIYA TO AB AA JAYEGA.
@@ -23,7 +23,7 @@ function App() {
 
   function handleDelete(noteId) {
     console.log(noteId)
-    axios.delete(`http://localhost:3000/api/notes/${noteId}`)
+    axios.delete(`https://full-stack-1-o577.onrender.com/api/notes/${noteId}`)
     .then((res) => {
       console.log(res.data)
       fetchNotes()
@@ -35,7 +35,7 @@ function App() {
     e.preventDefault()
     const {title, description} = e.target.elements
     console.log(title.value, description.value)
-    axios.post('http://localhost:3000/api/notes', {
+    axios.post('https://full-stack-1-o577.onrender.com/api/notes', {
       title: title.value,
       description: description.value
     })

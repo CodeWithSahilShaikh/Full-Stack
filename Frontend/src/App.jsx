@@ -4,7 +4,7 @@ import axios from 'axios'
 
 
 function App() {
-  const BASE_URL = "https://full-stack-1-o577.onrender.com" // development ke liye
+  const BASE_URL = "https://full-stack-1-o577.onrender.com/"
   const [notes, setNotes] = useState([])
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");

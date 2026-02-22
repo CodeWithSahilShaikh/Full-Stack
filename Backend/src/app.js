@@ -9,8 +9,10 @@ const path = require('path');
 
 
 const app = express();
-app.use(express.json());
-app.use(cors());  // ye line likhne se hmara server cross origin wali request accept krna chalu kr deta hai.
+app.use(express.json()); // middleware use krna pdta hai taki hum req.body se data access kr ske, otherwise req.body undefined aayega.
+app.use(cors({
+  origin: "https://full-stack-1-o577.onrender.com/"  // 
+}));  // ye line likhne se hmara server cross origin wali request accept krna chalu kr deta hai. but bss origin me jo frontend ka url diya hai usse hi.
 app.use(express.static("./public"))  // iss middleware me hm jo bhi folder ka path dete hai, uss folder ke sabhi files ko publically available kra deti hai means ab use koi bhi access kr skta hai. 
 
 /*
@@ -64,8 +66,6 @@ app.patch('/api/notes/:id', async (req, res) => {
       const { id } = req.params;
   
       const updateData = {};
-       console.log("ID received:", id);        // ✅ add karo
-      console.log("Body received:", req.body);
   
       if (req.body.title !== undefined) {
         updateData.title = req.body.title;
@@ -77,10 +77,10 @@ app.patch('/api/notes/:id', async (req, res) => {
   
       const updatedNote = await noteModel.findByIdAndUpdate(
         id,
-        { $set: updateData },
+        { $set: updateData }, // jo fields bheje hai only unhe hi update kro
         {
-          new: true,
-          runValidators: true   // VERY IMPORTANT
+          new: true,  // Naya updated data wapas do
+          runValidators: true   // Schema rules follow karo
         }
       );
   
@@ -117,5 +117,17 @@ app.use('*name', (req, res) => {
 // toh suno ye middleware kya krti hai - iss middleware me hm jo bhi folder ka path dete hai, uss folder ke sabhi files ko publically available kra deti hai means ab use koi bhi access kr skta hai.
 
 // "http://localhost:3000/assets/index-DvxqN-F2.js"  iss url me assets folder and js file ka jo name hai wo exist krti hai isi liye koi error nhi aayga agr yaha koi aise file ka naam hota jo exist nhi krti hai to response me fir html hi milta.
+
+// Hmm index.html kyu bhejte hai?
+// Kyunki React Single Page Application (SPA) hai!
+//User browser mein type karta hai:
+// https://tumharisite.com/notes
+// Server sochta hai → "/notes" ka koi route hai mere paas?
+// ❌ Nahi hai → 404 Error!
+// Wildcard se fix
+// Koi bhi URL aaye → index.html bhej do
+// Browser ko index.html mila → React load hua
+// React ne URL dekha → /notes → apna route handle kiya ✅
+// yaha se React dekhega kis route pr kya dikhana hai.
 
 module.exports = app;

@@ -60,14 +60,43 @@ app.delete('/api/notes/:id', async (req, res) => {
 */
 
 app.patch('/api/notes/:id', async (req, res) => {
-    const {id} = req.params;
-    const {description} = req.body;
-    const note = await noteModel.findByIdAndUpdate(id, {description});
-    res.status(200).json({
+    try {
+      const { id } = req.params;
+  
+      const updateData = {};
+       console.log("ID received:", id);        // ✅ add karo
+      console.log("Body received:", req.body);
+  
+      if (req.body.title !== undefined) {
+        updateData.title = req.body.title;
+      }
+  
+      if (req.body.description !== undefined) {
+        updateData.description = req.body.description;
+      }
+  
+      const updatedNote = await noteModel.findByIdAndUpdate(
+        id,
+        { $set: updateData },
+        {
+          new: true,
+          runValidators: true   // VERY IMPORTANT
+        }
+      );
+  
+      if (!updatedNote) {
+        return res.status(404).json({ message: "Note not found" });
+      }
+  
+      res.json({
         message: "Note updated successfully",
-       note
-    });
-});
+        updatedNote
+      });
+  
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  });
 
 // wild card (middleware) : ye unn api ko handle krta hai jo api hmne bnayi nhi hai (create nhi kri hai)  and unn api pr user ne kuch bhi request kr diya. toh uss request ke response me hm index.html file send krte hai.
 app.use('*name', (req, res) => {

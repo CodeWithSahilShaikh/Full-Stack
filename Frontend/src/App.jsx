@@ -4,12 +4,14 @@ import axios from 'axios'
 
 
 function App() {
-
-  const [notes, setNotes] = useState([
-  ])
+  const BASE_URL = "https://full-stack-1-o577.onrender.com" // development ke liye
+  const [notes, setNotes] = useState([])
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [editingId, setEditingId] = useState(null);
 
   function fetchNotes() {
-    axios.get('https://full-stack-1-o577.onrender.com/api/notes')
+    axios.get(`${BASE_URL}/api/notes`)
     .then((res) => {
       // console.log(res.data)  // abhi browser pr CORS error aayega, ye browser(client) side pr aata hai, ye policy bolti hai ki aap ek website pr rehte huye dusri kisi website pr request nhi kr skte. Abhi hmara frontend and backend local pr run ho rha hai but inka address alg hai isliye error aayega. isi liye sirf development time pr ham CORs request ko accept krenge. isko accept krne keliye hm backend ke terminal pr cors packaage install krenge, "npm i cors"
       //  HMNE CORS INSTALL KR LIYA TO AB AA JAYEGA.
@@ -21,9 +23,20 @@ function App() {
     fetchNotes()
   }, [])
 
+
+  function handleEdit(note) {
+    setTitle(note.title);
+    setDescription(note.description);
+    setEditingId(note._id); // mark as editing
+
+  }
+
+
+
+
   function handleDelete(noteId) {
     console.log(noteId)
-    axios.delete(`https://full-stack-1-o577.onrender.com/api/notes/${noteId}`)
+    axios.delete(`${BASE_URL}/api/notes/${noteId}`)
     .then((res) => {
       console.log(res.data)
       fetchNotes()
@@ -31,35 +44,69 @@ function App() {
   }
 
 
-  function handleSubmit(e) {
-    e.preventDefault()
-    const {title, description} = e.target.elements
-    console.log(title.value, description.value)
-    axios.post('https://full-stack-1-o577.onrender.com/api/notes', {
-      title: title.value,
-      description: description.value
-    })
-    .then((res) => {
-      console.log(res.data)
+
+
+function handleSubmit(e) {
+  e.preventDefault()
+
+  const payload = {}
+
+  if (title && title.trim() !== "") {
+    payload.title = title.trim()
+  }
+
+  if (description && description.trim() !== "") {
+    payload.description = description.trim()
+  }
+
+  console.log("Payload:", payload)
+
+  if (editingId) {
+    // UPDATE
+    axios.patch(
+      `${BASE_URL}/api/notes/${editingId}`, payload,
+      payload
+    )
+    .then(res => {
+      console.log("Updated:", res.data)
+      setEditingId(null)
       fetchNotes()
+      setTitle('')
+      setDescription('')
+    })
+  } else {
+    // CREATE
+    axios.post(
+      `${BASE_URL}/api/notes`, payload
+    )
+    .then(res => {
+      console.log("Created:", res.data)
+      fetchNotes()
+      setTitle('')
+      setDescription('')
     })
   }
+}
+  
 
   return (
     <>
     <form className='note-create-form' onSubmit={handleSubmit}>
-      <input type="text" name='title' placeholder='Enter Title' />
-      <input type="text" name='description' placeholder='Enter Description' />
-      <button type='submit'>Create Note</button>
+      <input onChange={(e) => setTitle(e.target.value)} type="text" name='title' value={title} placeholder='Enter Title' />
+      <input onChange={(e) => setDescription(e.target.value)} type="text" name='description' value={description} placeholder='Enter Description' />
+      <button>
+    {editingId ? "Update Note" : "Create Note"}
+      </button>
     </form>
     <div className="notes">
       {
         notes.map(note => {
           return (
-            <div className="note">
+            <div className="note" key={note._id}>
               <h1>{note.title}</h1>
               <p>{note.description}</p>
               <button onClick={()=>handleDelete(note._id)}>Delete</button>
+              <button onClick={() => handleEdit(note)}>Edit</button>
             </div>
           )
         })

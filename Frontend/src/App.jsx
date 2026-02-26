@@ -4,7 +4,7 @@ import axios from 'axios'
 
 
 function App() {
-  const BASE_URL = "https://full-stack-1-o577.onrender.com/"
+  const BASE_URL = "https://full-stack-1-o577.onrender.com"
   const [notes, setNotes] = useState([])
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -15,17 +15,13 @@ function App() {
     .then((res) => {
       // console.log(res.data)  // abhi browser pr CORS error aayega, ye browser(client) side pr aata hai, ye policy bolti hai ki aap ek website pr rehte huye dusri kisi website pr request nhi kr skte. Abhi hmara frontend and backend local pr run ho rha hai but inka address alg hai isliye error aayega. isi liye sirf development time pr ham CORs request ko accept krenge. isko accept krne keliye hm backend ke terminal pr cors packaage install krenge, "npm i cors"
       //  HMNE CORS INSTALL KR LIYA TO AB AA JAYEGA.
-          if (Array.isArray(res.data)) {
-      setNotes(res.data); // ✅ Direct array
-    } else if (res.data.notes && Array.isArray(res.data.notes)) {
-      setNotes(res.data.notes); // ✅ Nested in 'notes' key
-    } else {
-      setNotes([]); // ✅ Fallback to empty array
-    }
-  })
-  .catch((err) => {
-    console.error('Fetch error:', err);
-    setNotes([]);
+ 
+      setNotes(res.data.notes || []); // ✅ Nested in 'notes' key with fallback
+   
+    })
+    .catch((err) => {
+      console.error("Error fetching notes:", err);
+      setNotes([]);
     })
   }
 
@@ -115,8 +111,10 @@ function handleSubmit(e) {
             <div className="note" key={note._id}>
               <h1>{note.title}</h1>
               <p>{note.description}</p>
-              <button onClick={()=>handleDelete(note._id)}>Delete</button>
-              <button onClick={() => handleEdit(note)}>Edit</button>
+              <div className="note-actions">
+                <button className="btn-delete" onClick={()=>handleDelete(note._id)}>Delete</button>
+                <button className="btn-edit" onClick={() => handleEdit(note)}>Edit</button>
+              </div>
             </div>
           )
         })

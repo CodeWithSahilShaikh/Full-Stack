@@ -13,7 +13,6 @@ app.use(express.json()); // middleware use krna pdta hai taki hum req.body se da
 app.use(cors({
   origin: "https://full-stack-1-o577.onrender.com/"  // 
 }));  // ye line likhne se hmara server cross origin wali request accept krna chalu kr deta hai. but bss origin me jo frontend ka url diya hai usse hi.
-app.use(express.static("./public"))  // iss middleware me hm jo bhi folder ka path dete hai, uss folder ke sabhi files ko publically available kra deti hai means ab use koi bhi access kr skta hai. 
 
 /*
 - POST /api/notes
@@ -98,8 +97,11 @@ app.patch('/api/notes/:id', async (req, res) => {
     }
   });
 
+// Serve static files AFTER API routes
+app.use(express.static("./public"))
+
 // wild card (middleware) : ye unn api ko handle krta hai jo api hmne bnayi nhi hai (create nhi kri hai)  and unn api pr user ne kuch bhi request kr diya. toh uss request ke response me hm index.html file send krte hai.
-app.use('*name', (req, res) => {
+app.use((req, res) => {
     res.sendFile(path.join(__dirname, "..", "/public/index.html"))
     // res.send("this is wild card")
 })

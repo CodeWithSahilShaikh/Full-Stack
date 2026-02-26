@@ -2,8 +2,9 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
 }
+
 html,
 body,
 #root {
@@ -12,30 +13,396 @@ body,
 }
 
 html {
-  background-color: #212121;
-  font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: #ffffff;
+  scroll-behavior: smooth;
 }
 
-.notes {
-  display: flex;
-  gap: 1rem;
-  padding-block: 1rem;
-  padding-inline: 3rem;
-  flex-wrap: wrap;
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
-.note {
-  background-color: #494949;
-  padding: 1rem;
-  border-radius: 0.7rem;
-  max-width: 20rem;
-  color: rgb(255, 253, 249);
-}
+
 
 .note-create-form {
   display: flex;
-  gap: 1rem;
-  padding-block: 1rem;
-  padding-inline: 3rem;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 2rem 3rem;
+  max-width: 800px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  margin-top: 2rem;
+  transition: all 0.3s ease;
+}
+
+.note-create-form:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+.note-create-form h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.note-create-form input,
+.note-create-form textarea {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: #ffffff;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.note-create-form input::placeholder,
+.note-create-form textarea::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.note-create-form input:focus,
+.note-create-form textarea:focus {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: #6366f1;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+}
+
+.note-create-form textarea {
+  min-height: 120px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.note-create-form button {
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+}
+
+.note-create-form button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+}
+
+.note-create-form button:active {
+  transform: translateY(0);
+}
+
+
+
+.notes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  padding: 2rem 3rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+
+
+.note {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(10px);
+  padding: 1.5rem;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgb(255, 253, 249);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  animation: fadeInUp 0.5s ease-out;
+}
+
+/* Gradient border effect on hover */
+.note::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.note:hover::before {
+  transform: scaleX(1);
+}
+
+.note:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 12px 30px rgba(99, 102, 241, 0.3);
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+/* Note Title */
+.note h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #ffffff;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+/* Note Description */
+.note p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 1rem;
+  word-wrap: break-word;
+}
+
+/* Note Actions (if you add edit/delete buttons) */
+.note-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.note-actions button {
+  flex: 1;
+  padding: 0.625rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.note-actions .btn-edit {
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.note-actions .btn-edit:hover {
+  background: rgba(59, 130, 246, 0.3);
+  border-color: #60a5fa;
+  transform: translateY(-2px);
+}
+
+.note-actions .btn-delete {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.note-actions .btn-delete:hover {
+  background: rgba(239, 68, 68, 0.3);
+  border-color: #f87171;
+  transform: translateY(-2px);
+}
+
+
+
+.empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 4rem 2rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.empty-state-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.empty-state-text {
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+
+
+.app-header {
+  text-align: center;
+  padding: 3rem 2rem 1rem;
+}
+
+.app-header h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.5rem;
+}
+
+.app-header p {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a2e;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #8b5cf6, #ec4899);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 1200px) {
+  .notes {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .notes {
+    grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+    padding: 1.5rem 1.5rem;
+    gap: 1rem;
+  }
+
+  .note-create-form {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+
+  .note-create-form h2 {
+    font-size: 1.5rem;
+  }
+
+  .app-header h1 {
+    font-size: 2.25rem;
+  }
+
+  .note {
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .notes {
+    padding: 1rem;
+  }
+
+  .note-create-form {
+    padding: 1.25rem;
+    gap: 1rem;
+  }
+
+  .note-create-form input,
+  .note-create-form textarea,
+  .note-create-form button {
+    font-size: 0.9rem;
+  }
+
+  .app-header {
+    padding: 2rem 1rem 0.5rem;
+  }
+
+  .app-header h1 {
+    font-size: 2rem;
+  }
+
+  .note-actions {
+    flex-direction: column;
+  }
+
+  .note-actions button {
+    width: 100%;
+  }
+}
+
+
+
+.text-center {
+  text-align: center;
+}
+
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mt-3 { margin-top: 1.5rem; }
+.mt-4 { margin-top: 2rem; }
+
+.mb-1 { margin-bottom: 0.5rem; }
+.mb-2 { margin-bottom: 1rem; }
+.mb-3 { margin-bottom: 1.5rem; }
+.mb-4 { margin-bottom: 2rem; }
+
+
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #6366f1;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }

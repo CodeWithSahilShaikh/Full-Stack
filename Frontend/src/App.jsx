@@ -15,7 +15,17 @@ function App() {
     .then((res) => {
       // console.log(res.data)  // abhi browser pr CORS error aayega, ye browser(client) side pr aata hai, ye policy bolti hai ki aap ek website pr rehte huye dusri kisi website pr request nhi kr skte. Abhi hmara frontend and backend local pr run ho rha hai but inka address alg hai isliye error aayega. isi liye sirf development time pr ham CORs request ko accept krenge. isko accept krne keliye hm backend ke terminal pr cors packaage install krenge, "npm i cors"
       //  HMNE CORS INSTALL KR LIYA TO AB AA JAYEGA.
-      setNotes(res.data.notes) 
+          if (Array.isArray(res.data)) {
+      setNotes(res.data); // ✅ Direct array
+    } else if (res.data.notes && Array.isArray(res.data.notes)) {
+      setNotes(res.data.notes); // ✅ Nested in 'notes' key
+    } else {
+      setNotes([]); // ✅ Fallback to empty array
+    }
+  })
+  .catch((err) => {
+    console.error('Fetch error:', err);
+    setNotes([]);
     })
   }
 

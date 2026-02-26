@@ -1,17 +1,32 @@
 # Full-Stack Notes App
 
-A simple CRUD application for managing notes.
+A simple **full-stack CRUD Notes application** built using **React.js (Frontend)**, **Node.js + Express (Backend)**, and **MongoDB (Database)**.
 
-## Features
-- Create new notes with title and description
-- Edit existing notes
-- Delete notes
-- Responsive design
-
-## Tech Stack
-- **Backend:** Node.js, Express.js
-- **Database:** MongoDB
-- **Frontend:** HTML, CSS, JavaScript
-
-## Live Demo
+Live Demo:
 [https://full-stack-1-o577.onrender.com](https://full-stack-1-o577.onrender.com)
+
+---
+
+## 🚀 Features
+
+* Create, edit, and delete notes
+* REST API integration
+* MongoDB data persistence
+* Responsive UI
+* Full frontend–backend connectivity
+
+---
+
+## 🛠️ Tech Stack
+
+**Frontend:** React.js
+**Backend:** Node.js, Express.js
+**Database:** MongoDB
+
+---
+
+## 📌 Purpose
+
+This project demonstrates how a React frontend communicates with an Express API and stores data in MongoDB using a clean CRUD structure.
+
+---
